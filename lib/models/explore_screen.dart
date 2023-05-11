@@ -10,29 +10,37 @@ return FutureBuilder(
     future: mockService.getExploreData(),
     //3
     builder:(context, AsyncSnapshotExplorerData>snapshot)
-    {
+
 //4
 if (snapshot.connectionState == connectionState.done)
 {
     //5
-
+    return ListView(
+        //6
+    scrollDirection: Axis.vertical,
+    children:[
+        //7
+        TodayRecipeListView(recipes:snapshot.data?.todayRecipes ?? []),
+    //8
+    const SizedBox(height: 16),
+    //9
+   FriendPostListView(friendPosts: snapshot.data?.friendPosts ?? []),
+    ]
     final recipes = snapshot.data?.todayRecipes ?? [];
     // TODO: Substitua isso pelo TodayRecipeListView.
-    return TodayRecipeListView(locais: locais);//
-    return Center(
-        child: Container(
-            child: const Text('Show TodayRecipeListView'),
-        ),
+    Container(
+        height: 400,
+        color:colors.green,
+    ),
+    ],
     );
-} else {
-    //6
-    return const Center(
-        child: CircularProfressIndicator(),
-    );
-}
-
-    },
+    } else {
+        //10
+        return const Center(child: CircularProgressIndicator());
+    }
+),
 );
+}
 
     // final mockService = MockFooderlichService();
     // ExploreScreen({super.key});
