@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'screens/explore_screen.dart';
-
 import 'screens/recipes_screen.dart';
+import 'screens/grocery_screen.dart';
+import 'package:provider/provider.dart';
+import 'models/models.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key key}) : super(key: key);
 
   @override
   HomeState createState() => HomeState();
@@ -15,7 +16,7 @@ class HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static List<Widget> pages = <Widget>[
-    ExploreScreen(),
+    const GroceryScreen(),
     RecipesScreen(),
     Container(color: Colors.white),
     Container(color: Colors.blue),
@@ -29,33 +30,40 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Receitas Boas',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Theme.of(context).textSelectionTheme.selectionColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explorar',
+    return Consumer<TabManager>(
+      builder: (context, tabManager, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'FooderLich',
+              style: Theme.of(context).textTheme.headline6,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Receitas',
+          body: pages[tabManager.selectedTab],
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor:
+                Theme.of(context).textSelectionTheme.selectionColor,
+            currentIndex: tabManager.selectedTab,
+            onTap: (index) {
+              tabManager.goToTab(index);
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.explore),
+                label: 'Explore',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.book),
+                label: 'Receitas',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.list),
+                label: 'Para Comprar',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Para Comprar',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
